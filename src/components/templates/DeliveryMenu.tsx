@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Product } from '../../types';
+import { Product } from '../../types/index';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
 import { useCustomization } from '../../hooks/useCustomization';
@@ -7,7 +7,8 @@ import { useCart } from '../../context/CartContext';
 import CategoryNavigation from '../organisms/CategoryNavigation';
 import ProductGrid from '../organisms/ProductGrid';
 import ProductCustomizationModal from '../organisms/ProductCustomizationModal';
-import { ShoppingBag } from 'lucide-react';
+import CartButton from '../molecules/CartButton';
+import CartOverlay from '../organisms/CartOverlay';
 
 interface DeliveryMenuProps {
   vendorId: string;
@@ -22,6 +23,7 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
+  const [isCartOpen, setIsCartOpen] = useState(false);
   
   // Hooks
   const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
@@ -79,18 +81,7 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
       <header className="bg-white shadow-sm">
         <div className="container mx-auto px-4 py-4 flex justify-between items-center">
           <h1 className="text-xl font-bold text-gray-900">Food Delivery</h1>
-          
-          <button 
-            className="relative p-2 text-gray-700 hover:text-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-full"
-            aria-label={`View cart with ${totalItems} items`}
-          >
-            <ShoppingBag size={24} />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-blue-600 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </button>
+          <CartButton onClick={() => setIsCartOpen(true)} />
         </div>
       </header>
       
@@ -130,6 +121,9 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
           loading={customizationLoading}
         />
       )}
+
+      {/* Cart Overlay */}
+      <CartOverlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
     </div>
   );
 };
