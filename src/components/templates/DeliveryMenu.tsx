@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Product } from '../../types/index';
+import { LocationData } from '../../App';
 import { useCategories } from '../../hooks/useCategories';
 import { useProducts } from '../../hooks/useProducts';
 import { useCustomization } from '../../hooks/useCustomization';
@@ -9,59 +10,67 @@ import ProductGrid from '../organisms/ProductGrid';
 import ProductCustomizationModal from '../organisms/ProductCustomizationModal';
 import CartButton from '../molecules/CartButton';
 import CartOverlay from '../organisms/CartOverlay';
+import TopBar from '../molecules/TopBar';
 
 interface DeliveryMenuProps {
   vendorId: string;
+  addressId: number;
+  deliveryLocation: LocationData;
+  onBackToRestaurants?: () => void;
   className?: string;
 }
 
 const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
   vendorId,
+  addressId,
+  deliveryLocation,
+  onBackToRestaurants,
   className = ''
 }) => {
   // State
-  const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(null);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [viewType, setViewType] = useState<'grid' | 'list'>('grid');
   const [isCartOpen, setIsCartOpen] = useState(false);
-  
+
   // Hooks
-  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories();
-  const { products, loading: productsLoading, error: productsError } = useProducts(selectedCategoryId);
-  const { 
-    options, 
-    loading: customizationLoading, 
-    customization, 
-    updateSingleSelection, 
-    updateMultiSelection, 
-    calculateTotalPrice, 
+  const { categories, loading: categoriesLoading, error: categoriesError } = useCategories(addressId.toString());
+  console.log("CATEGORIES>>>>>>>>>>>>>>>", categories);
+  const { products, loading: productsLoading, error: productsError } = useProducts(selectedCategoryId?.toString());
+  const {
+    options,
+    loading: customizationLoading,
+    customization,
+    updateSingleSelection,
+    updateMultiSelection,
+    calculateTotalPrice,
     validateSelections,
     updateSpecialInstructions
   } = useCustomization(selectedProduct?.id || '');
   const { addToCart, totalItems } = useCart();
-  
+
   // Set the first category as selected when categories load
   useEffect(() => {
     if (categories.length > 0 && !selectedCategoryId) {
       setSelectedCategoryId(categories[0].id);
     }
   }, [categories, selectedCategoryId]);
-  
+
   // Handle category selection
-  const handleCategorySelect = (categoryId: string) => {
+  const handleCategorySelect = (categoryId: number) => {
     setSelectedCategoryId(categoryId);
   };
-  
+
   // Handle product selection
   const handleProductSelect = (product: Product) => {
     setSelectedProduct(product);
-    
+
     // If product doesn't have customization options, add it to cart directly
     if (!product.hasCustomization) {
       addToCart(product, 1);
     }
   };
-  
+
   // Handle add to cart with customization
   const handleAddToCartWithCustomization = (quantity: number) => {
     if (selectedProduct && validateSelections()) {
@@ -69,31 +78,50 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
       setSelectedProduct(null);
     }
   };
-  
+
   // Close customization modal
   const handleCloseModal = () => {
     setSelectedProduct(null);
   };
-  
+
   return (
     <div className={`flex flex-col h-full ${className}`}>
-      {/* Header with cart button */}
-      <header className="bg-white shadow-sm">
-        <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-          <h1 className="text-xl font-bold text-gray-900">Food Delivery</h1>
+      {/* Top Bar */}
+      <TopBar 
+        title="MapleEats"
+        subtitle="Fresh Food Delivered"
+        showBackButton={!!onBackToRestaurants}
+        onBackClick={onBackToRestaurants}
+      />
+
+      {/* Sticky Header with Cart */}
+      <header className="sticky top-[64px] z-30 bg-white shadow-sm border-b border-gray-200">
+        <div className="container mx-auto px-4 py-2 flex justify-between items-center">
+          {/* Restaurant Info */}
+          <div className="flex items-center space-x-3">
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-bold text-gray-900">Restaurant Menu</h1>
+              <p className="text-xs text-gray-500">Delivering to {deliveryLocation.address.split(',')[0]}</p>
+            </div>
+            <div className="sm:hidden">
+              <h1 className="text-base font-bold text-gray-900">Menu</h1>
+            </div>
+          </div>
+
+          {/* Cart Button */}
           <CartButton onClick={() => setIsCartOpen(true)} />
         </div>
       </header>
-      
-      {/* Category Navigation */}
+
+      {/* Category Navigation - Also sticky but below header */}
       <CategoryNavigation
         categories={categories}
         activeCategory={selectedCategoryId}
         onSelectCategory={handleCategorySelect}
         loading={categoriesLoading}
-        className="sticky top-0 z-20"
+        className="sticky top-[128px] z-20 bg-white"
       />
-      
+
       {/* Product Grid */}
       <ProductGrid
         products={products}
@@ -104,7 +132,7 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
         onToggleView={setViewType}
         className="flex-1 overflow-y-auto"
       />
-      
+
       {/* Product Customization Modal */}
       {selectedProduct && selectedProduct.hasCustomization && (
         <ProductCustomizationModal
@@ -123,7 +151,11 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
       )}
 
       {/* Cart Overlay */}
-      <CartOverlay isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartOverlay 
+        isOpen={isCartOpen} 
+        onClose={() => setIsCartOpen(false)}
+        deliveryLocation={deliveryLocation}
+      />
     </div>
   );
 };

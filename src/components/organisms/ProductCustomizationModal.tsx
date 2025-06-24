@@ -146,12 +146,12 @@ const ProductCustomizationModal: React.FC<ProductCustomizationModalProps> = ({
                   ) : (
                     // Multi-select modifier
                     <div className="space-y-2">
-                      {option.minSelections && option.minSelections > 0 && (
+                      {/* {option.minSelections && option.minSelections > 0 && (
                         <p className="text-sm text-gray-500 mb-2">
                           Select at least {option.minSelections}
                           {option.maxSelections && `, up to ${option.maxSelections}`}
                         </p>
-                      )}
+                      )} */}
                       
                       {option.options.map((opt) => {
                         const selections = initialCustomization.selections[option.id] as string[] || [];

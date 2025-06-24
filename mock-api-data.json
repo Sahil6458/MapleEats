@@ -1,0 +1,527 @@
+{
+  "products": [
+    {
+      "id": "p1",
+      "name": "Buffalo Wings",
+      "description": "Crispy chicken wings tossed in spicy buffalo sauce, served with celery and blue cheese dip",
+      "price": 12.99,
+      "imageUrl": "https://images.pexels.com/photos/7290308/pexels-photo-7290308.jpeg",
+      "categoryId": "3",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["chicken", "spicy", "popular"]
+    },
+    {
+      "id": "p2",
+      "name": "Mozzarella Sticks",
+      "description": "Golden fried mozzarella cheese sticks served with marinara sauce",
+      "price": 9.99,
+      "imageUrl": "https://images.pexels.com/photos/4553031/pexels-photo-4553031.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "3",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["cheese", "fried", "vegetarian"]
+    },
+    {
+      "id": "p3",
+      "name": "Loaded Nachos",
+      "description": "Tortilla chips topped with melted cheese, jalapeños, sour cream, and guacamole",
+      "price": 11.99,
+      "imageUrl": "https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "3",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["mexican", "shareable", "vegetarian"]
+    },
+    {
+      "id": "p4",
+      "name": "Classic Cheeseburger",
+      "description": "Juicy beef patty topped with cheddar cheese, lettuce, tomato, and special sauce on a brioche bun",
+      "price": 14.99,
+      "imageUrl": "https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "4",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["burger", "popular", "beef"]
+    },
+    {
+      "id": "p5",
+      "name": "BBQ Bacon Burger",
+      "description": "Beef patty with crispy bacon, BBQ sauce, onion rings, and cheddar cheese",
+      "price": 16.99,
+      "imageUrl": "https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "4",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["burger", "bacon", "bbq"]
+    },
+    {
+      "id": "p6",
+      "name": "Veggie Burger",
+      "description": "Plant-based patty with avocado, lettuce, tomato, and herb mayo on a whole wheat bun",
+      "price": 13.99,
+      "imageUrl": "https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "4",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["vegetarian", "healthy", "vegan"]
+    },
+    {
+      "id": "p7",
+      "name": "Margherita Pizza",
+      "description": "Classic pizza with fresh mozzarella, tomato sauce, and basil leaves",
+      "price": 18.99,
+      "imageUrl": "https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "5",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["pizza", "classic", "vegetarian"]
+    },
+    {
+      "id": "p8",
+      "name": "Pepperoni Pizza",
+      "description": "Traditional pizza topped with pepperoni slices and mozzarella cheese",
+      "price": 20.99,
+      "imageUrl": "https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "5",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["pizza", "pepperoni", "popular"]
+    },
+    {
+      "id": "p9",
+      "name": "Supreme Pizza",
+      "description": "Loaded with pepperoni, sausage, mushrooms, bell peppers, and onions",
+      "price": 24.99,
+      "imageUrl": "https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "5",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["pizza", "supreme", "loaded"]
+    },
+    {
+      "id": "p10",
+      "name": "Fresh Lemonade",
+      "description": "House-made lemonade with fresh-squeezed lemons",
+      "price": 4.99,
+      "imageUrl": "https://images.pexels.com/photos/2109099/pexels-photo-2109099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "6",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["refreshing", "non-alcoholic", "citrus"]
+    },
+    {
+      "id": "p11",
+      "name": "Cold Brew Coffee",
+      "description": "Smooth and bold coffee brewed cold for 24 hours",
+      "price": 5.99,
+      "imageUrl": "https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "6",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["coffee", "cold", "caffeine"]
+    },
+    {
+      "id": "p12",
+      "name": "Strawberry Milkshake",
+      "description": "Creamy vanilla ice cream blended with fresh strawberries and milk",
+      "price": 6.99,
+      "imageUrl": "https://images.pexels.com/photos/434295/pexels-photo-434295.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1",
+      "categoryId": "6",
+      "available": true,
+      "hasCustomization": true,
+      "tags": ["milkshake", "strawberry", "sweet"]
+    }
+  ],
+  "customizations": {
+    "p1": [
+      {
+        "id": "c1",
+        "name": "Wing Sauce",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c1-1", "name": "Buffalo", "priceAdjustment": 0, "default": true },
+          { "id": "c1-2", "name": "BBQ", "priceAdjustment": 0 },
+          { "id": "c1-3", "name": "Honey Garlic", "priceAdjustment": 0.5 },
+          { "id": "c1-4", "name": "Extra Hot", "priceAdjustment": 0.5 }
+        ]
+      },
+      {
+        "id": "c2",
+        "name": "Quantity",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c2-1", "name": "6 Wings", "priceAdjustment": 0, "default": true },
+          { "id": "c2-2", "name": "12 Wings", "priceAdjustment": 6.99 },
+          { "id": "c2-3", "name": "24 Wings", "priceAdjustment": 12.99 }
+        ]
+      }
+    ],
+    "p2": [
+      {
+        "id": "c3",
+        "name": "Dipping Sauce",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c3-1", "name": "Marinara", "priceAdjustment": 0, "default": true },
+          { "id": "c3-2", "name": "Ranch", "priceAdjustment": 0 },
+          { "id": "c3-3", "name": "Garlic Aioli", "priceAdjustment": 0.5 }
+        ]
+      }
+    ],
+    "p3": [
+      {
+        "id": "c4",
+        "name": "Protein Add-ons",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 2,
+        "options": [
+          { "id": "c4-1", "name": "Grilled Chicken", "priceAdjustment": 3.99 },
+          { "id": "c4-2", "name": "Ground Beef", "priceAdjustment": 4.99 },
+          { "id": "c4-3", "name": "Pulled Pork", "priceAdjustment": 4.99 }
+        ]
+      }
+    ],
+    "p4": [
+      {
+        "id": "c5",
+        "name": "Doneness",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c5-1", "name": "Medium Rare", "priceAdjustment": 0 },
+          { "id": "c5-2", "name": "Medium", "priceAdjustment": 0, "default": true },
+          { "id": "c5-3", "name": "Well Done", "priceAdjustment": 0 }
+        ]
+      },
+      {
+        "id": "c6",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 5,
+        "options": [
+          { "id": "c6-1", "name": "Extra Cheese", "priceAdjustment": 1.5 },
+          { "id": "c6-2", "name": "Bacon", "priceAdjustment": 2.99 },
+          { "id": "c6-3", "name": "Avocado", "priceAdjustment": 2.49 },
+          { "id": "c6-4", "name": "Fried Egg", "priceAdjustment": 1.99 },
+          { "id": "c6-5", "name": "Mushrooms", "priceAdjustment": 1.49 }
+        ]
+      },
+      {
+        "id": "c7",
+        "name": "Side",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c7-1", "name": "French Fries", "priceAdjustment": 0, "default": true },
+          { "id": "c7-2", "name": "Sweet Potato Fries", "priceAdjustment": 1.99 },
+          { "id": "c7-3", "name": "Onion Rings", "priceAdjustment": 2.49 },
+          { "id": "c7-4", "name": "Side Salad", "priceAdjustment": 1.49 }
+        ]
+      }
+    ],
+    "p5": [
+      {
+        "id": "c5",
+        "name": "Doneness",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c5-1", "name": "Medium Rare", "priceAdjustment": 0 },
+          { "id": "c5-2", "name": "Medium", "priceAdjustment": 0, "default": true },
+          { "id": "c5-3", "name": "Well Done", "priceAdjustment": 0 }
+        ]
+      },
+      {
+        "id": "c6",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 5,
+        "options": [
+          { "id": "c6-1", "name": "Extra Cheese", "priceAdjustment": 1.5 },
+          { "id": "c6-2", "name": "Bacon", "priceAdjustment": 2.99 },
+          { "id": "c6-3", "name": "Avocado", "priceAdjustment": 2.49 },
+          { "id": "c6-4", "name": "Fried Egg", "priceAdjustment": 1.99 },
+          { "id": "c6-5", "name": "Mushrooms", "priceAdjustment": 1.49 }
+        ]
+      },
+      {
+        "id": "c7",
+        "name": "Side",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c7-1", "name": "French Fries", "priceAdjustment": 0, "default": true },
+          { "id": "c7-2", "name": "Sweet Potato Fries", "priceAdjustment": 1.99 },
+          { "id": "c7-3", "name": "Onion Rings", "priceAdjustment": 2.49 },
+          { "id": "c7-4", "name": "Side Salad", "priceAdjustment": 1.49 }
+        ]
+      }
+    ],
+    "p6": [
+      {
+        "id": "c8",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 5,
+        "options": [
+          { "id": "c8-1", "name": "Extra Avocado", "priceAdjustment": 1.99 },
+          { "id": "c8-2", "name": "Hummus", "priceAdjustment": 1.49 },
+          { "id": "c8-3", "name": "Sprouts", "priceAdjustment": 0.99 },
+          { "id": "c8-4", "name": "Roasted Red Peppers", "priceAdjustment": 1.49 }
+        ]
+      },
+      {
+        "id": "c9",
+        "name": "Side",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c9-1", "name": "Sweet Potato Fries", "priceAdjustment": 0, "default": true },
+          { "id": "c9-2", "name": "Side Salad", "priceAdjustment": 0 },
+          { "id": "c9-3", "name": "Fruit Cup", "priceAdjustment": 1.99 }
+        ]
+      }
+    ],
+    "p7": [
+      {
+        "id": "c10",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c10-1", "name": "Small (10\")", "priceAdjustment": -3.00 },
+          { "id": "c10-2", "name": "Medium (12\")", "priceAdjustment": 0, "default": true },
+          { "id": "c10-3", "name": "Large (14\")", "priceAdjustment": 4.00 },
+          { "id": "c10-4", "name": "Extra Large (16\")", "priceAdjustment": 7.00 }
+        ]
+      },
+      {
+        "id": "c11",
+        "name": "Crust Type",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c11-1", "name": "Regular Crust", "priceAdjustment": 0, "default": true },
+          { "id": "c11-2", "name": "Thin Crust", "priceAdjustment": 0 },
+          { "id": "c11-3", "name": "Thick Crust", "priceAdjustment": 1.99 },
+          { "id": "c11-4", "name": "Stuffed Crust", "priceAdjustment": 3.99 }
+        ]
+      },
+      {
+        "id": "c12",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 8,
+        "options": [
+          { "id": "c12-1", "name": "Extra Cheese", "priceAdjustment": 2.99 },
+          { "id": "c12-2", "name": "Pepperoni", "priceAdjustment": 2.49 },
+          { "id": "c12-3", "name": "Mushrooms", "priceAdjustment": 1.99 },
+          { "id": "c12-4", "name": "Bell Peppers", "priceAdjustment": 1.99 },
+          { "id": "c12-5", "name": "Italian Sausage", "priceAdjustment": 2.99 },
+          { "id": "c12-6", "name": "Olives", "priceAdjustment": 1.99 },
+          { "id": "c12-7", "name": "Pineapple", "priceAdjustment": 1.99 },
+          { "id": "c12-8", "name": "Jalapeños", "priceAdjustment": 1.49 }
+        ]
+      }
+    ],
+    "p8": [
+      {
+        "id": "c10",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c10-1", "name": "Small (10\")", "priceAdjustment": -3.00 },
+          { "id": "c10-2", "name": "Medium (12\")", "priceAdjustment": 0, "default": true },
+          { "id": "c10-3", "name": "Large (14\")", "priceAdjustment": 4.00 },
+          { "id": "c10-4", "name": "Extra Large (16\")", "priceAdjustment": 7.00 }
+        ]
+      },
+      {
+        "id": "c11",
+        "name": "Crust Type",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c11-1", "name": "Regular Crust", "priceAdjustment": 0, "default": true },
+          { "id": "c11-2", "name": "Thin Crust", "priceAdjustment": 0 },
+          { "id": "c11-3", "name": "Thick Crust", "priceAdjustment": 1.99 },
+          { "id": "c11-4", "name": "Stuffed Crust", "priceAdjustment": 3.99 }
+        ]
+      },
+      {
+        "id": "c12",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 8,
+        "options": [
+          { "id": "c12-1", "name": "Extra Cheese", "priceAdjustment": 2.99 },
+          { "id": "c12-2", "name": "Pepperoni", "priceAdjustment": 2.49 },
+          { "id": "c12-3", "name": "Mushrooms", "priceAdjustment": 1.99 },
+          { "id": "c12-4", "name": "Bell Peppers", "priceAdjustment": 1.99 },
+          { "id": "c12-5", "name": "Italian Sausage", "priceAdjustment": 2.99 },
+          { "id": "c12-6", "name": "Olives", "priceAdjustment": 1.99 },
+          { "id": "c12-7", "name": "Pineapple", "priceAdjustment": 1.99 },
+          { "id": "c12-8", "name": "Jalapeños", "priceAdjustment": 1.49 }
+        ]
+      }
+    ],
+    "p9": [
+      {
+        "id": "c10",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c10-1", "name": "Small (10\")", "priceAdjustment": -3.00 },
+          { "id": "c10-2", "name": "Medium (12\")", "priceAdjustment": 0, "default": true },
+          { "id": "c10-3", "name": "Large (14\")", "priceAdjustment": 4.00 },
+          { "id": "c10-4", "name": "Extra Large (16\")", "priceAdjustment": 7.00 }
+        ]
+      },
+      {
+        "id": "c11",
+        "name": "Crust Type",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c11-1", "name": "Regular Crust", "priceAdjustment": 0, "default": true },
+          { "id": "c11-2", "name": "Thin Crust", "priceAdjustment": 0 },
+          { "id": "c11-3", "name": "Thick Crust", "priceAdjustment": 1.99 },
+          { "id": "c11-4", "name": "Stuffed Crust", "priceAdjustment": 3.99 }
+        ]
+      },
+      {
+        "id": "c12",
+        "name": "Extra Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 8,
+        "options": [
+          { "id": "c12-1", "name": "Extra Cheese", "priceAdjustment": 2.99 },
+          { "id": "c12-2", "name": "Pepperoni", "priceAdjustment": 2.49 },
+          { "id": "c12-3", "name": "Mushrooms", "priceAdjustment": 1.99 },
+          { "id": "c12-4", "name": "Bell Peppers", "priceAdjustment": 1.99 },
+          { "id": "c12-5", "name": "Italian Sausage", "priceAdjustment": 2.99 },
+          { "id": "c12-6", "name": "Olives", "priceAdjustment": 1.99 },
+          { "id": "c12-7", "name": "Pineapple", "priceAdjustment": 1.99 },
+          { "id": "c12-8", "name": "Jalapeños", "priceAdjustment": 1.49 }
+        ]
+      }
+    ],
+    "p10": [
+      {
+        "id": "c13",
+        "name": "Flavor",
+        "required": false,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c13-1", "name": "Classic", "priceAdjustment": 0, "default": true },
+          { "id": "c13-2", "name": "Strawberry", "priceAdjustment": 0.99 },
+          { "id": "c13-3", "name": "Raspberry", "priceAdjustment": 0.99 },
+          { "id": "c13-4", "name": "Mint", "priceAdjustment": 0.99 }
+        ]
+      },
+      {
+        "id": "c14",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c14-1", "name": "Small", "priceAdjustment": -1.00 },
+          { "id": "c14-2", "name": "Medium", "priceAdjustment": 0, "default": true },
+          { "id": "c14-3", "name": "Large", "priceAdjustment": 1.50 }
+        ]
+      }
+    ],
+    "p11": [
+      {
+        "id": "c15",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c15-1", "name": "Small", "priceAdjustment": -1.00 },
+          { "id": "c15-2", "name": "Medium", "priceAdjustment": 0, "default": true },
+          { "id": "c15-3", "name": "Large", "priceAdjustment": 1.50 }
+        ]
+      },
+      {
+        "id": "c16",
+        "name": "Add-ons",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 3,
+        "options": [
+          { "id": "c16-1", "name": "Extra Shot", "priceAdjustment": 1.50 },
+          { "id": "c16-2", "name": "Vanilla Syrup", "priceAdjustment": 0.75 },
+          { "id": "c16-3", "name": "Caramel Syrup", "priceAdjustment": 0.75 },
+          { "id": "c16-4", "name": "Almond Milk", "priceAdjustment": 0.60 }
+        ]
+      }
+    ],
+    "p12": [
+      {
+        "id": "c17",
+        "name": "Size",
+        "required": true,
+        "multiSelect": false,
+        "maxSelections": 1,
+        "options": [
+          { "id": "c17-1", "name": "Small", "priceAdjustment": -1.50 },
+          { "id": "c17-2", "name": "Medium", "priceAdjustment": 0, "default": true },
+          { "id": "c17-3", "name": "Large", "priceAdjustment": 2.00 }
+        ]
+      },
+      {
+        "id": "c18",
+        "name": "Toppings",
+        "required": false,
+        "multiSelect": true,
+        "minSelections": 0,
+        "maxSelections": 3,
+        "options": [
+          { "id": "c18-1", "name": "Whipped Cream", "priceAdjustment": 0.99 },
+          { "id": "c18-2", "name": "Cherry", "priceAdjustment": 0.50 },
+          { "id": "c18-3", "name": "Chocolate Chips", "priceAdjustment": 1.49 },
+          { "id": "c18-4", "name": "Extra Strawberries", "priceAdjustment": 1.99 }
+        ]
+      }
+    ]
+  }
+} 

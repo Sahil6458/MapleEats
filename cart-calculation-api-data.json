@@ -1,0 +1,64 @@
+{
+  "cart_calculation_endpoint": {
+    "path": "/api/cart/calculate",
+    "method": "POST",
+    "response": {
+      "success": true,
+      "data": {
+        "subtotal": 25.97,
+        "tax": {
+          "amount": 3.38,
+          "rate": 13.0,
+          "breakdown": {
+            "stateTax": 2.08,
+            "localTax": 1.30
+          }
+        },
+        "deliveryFee": {
+          "amount": 6.48,
+          "baseFee": 2.99,
+          "distanceFee": 1.50,
+          "serviceFee": 1.99
+        },
+        "fees": {
+          "platformFee": 1.49
+        },
+        "total": 37.32,
+        "estimatedDeliveryTime": "25-35 min"
+      }
+    }
+  },
+  "delivery_estimate_endpoint": {
+    "path": "/api/delivery/estimate",
+    "method": "GET",
+    "response": {
+      "success": true,
+      "data": {
+        "deliveryFee": 6.48,
+        "estimatedTime": "25-35 min",
+        "available": true
+      }
+    }
+  },
+  "address_validation_endpoint": {
+    "path": "/api/address/validate",
+    "method": "POST",
+    "response": {
+      "success": true,
+      "data": {
+        "valid": true,
+        "normalized": {
+          "street": "123 Main Street",
+          "city": "St Catharines",
+          "state": "ON",
+          "zipCode": "L2R 3B1",
+          "coordinates": {
+            "lat": 43.140965,
+            "lng": -79.238715
+          }
+        },
+        "message": "Address validated successfully"
+      }
+    }
+  }
+} 

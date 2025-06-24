@@ -6,111 +6,146 @@ const fetchProducts = async (categoryId?: string): Promise<Product[]> => {
   // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 1000));
   
-  // Mock data
+  // Mock data - Updated for new category structure
   const allProducts: Product[] = [
-    // Appetizers
+    // Starters (Category ID: 3)
     {
       id: 'p1',
-      name: 'Crispy Calamari',
-      description: 'Lightly battered calamari, fried to perfection and served with marinara sauce',
+      name: 'Buffalo Wings',
+      description: 'Crispy chicken wings tossed in spicy buffalo sauce, served with celery and blue cheese dip',
       price: 12.99,
-      imageUrl: 'https://images.pexels.com/photos/4553031/pexels-photo-4553031.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '1',
+      imageUrl: 'https://images.pexels.com/photos/7290308/pexels-photo-7290308.jpeg',
+      categoryId: '3',
       available: true,
       hasCustomization: true,
-      tags: ['seafood', 'fried', 'popular']
+      tags: ['chicken', 'spicy', 'popular']
     },
     {
       id: 'p2',
-      name: 'Spinach Artichoke Dip',
-      description: 'Creamy blend of spinach, artichokes, and melted cheeses, served with tortilla chips',
-      price: 10.99,
-      imageUrl: 'https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '1',
+      name: 'Mozzarella Sticks',
+      description: 'Golden fried mozzarella cheese sticks served with marinara sauce',
+      price: 9.99,
+      imageUrl: 'https://images.pexels.com/photos/4553031/pexels-photo-4553031.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '3',
       available: true,
       hasCustomization: true,
-      tags: ['vegetarian', 'shareable']
+      tags: ['cheese', 'fried', 'vegetarian']
     },
-    // Soups
     {
       id: 'p3',
-      name: 'French Onion Soup',
-      description: 'Caramelized onions in a rich beef broth, topped with croutons and melted Gruyère cheese',
-      price: 8.99,
-      imageUrl: 'https://images.pexels.com/photos/539451/pexels-photo-539451.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '1-1',
+      name: 'Loaded Nachos',
+      description: 'Tortilla chips topped with melted cheese, jalapeños, sour cream, and guacamole',
+      price: 11.99,
+      imageUrl: 'https://images.pexels.com/photos/1211887/pexels-photo-1211887.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '3',
       available: true,
-      hasCustomization: false,
-      tags: ['classic', 'hot']
+      hasCustomization: true,
+      tags: ['mexican', 'shareable', 'vegetarian']
     },
-    // Main Courses
+
+    // Burgers (Category ID: 4)
     {
       id: 'p4',
-      name: 'Grilled Salmon',
-      description: 'Fresh Atlantic salmon fillet, grilled and served with seasonal vegetables and lemon butter sauce',
-      price: 21.99,
-      imageUrl: 'https://images.pexels.com/photos/3655916/pexels-photo-3655916.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '2',
-      available: true,
-      hasCustomization: true,
-      tags: ['seafood', 'healthy', 'gluten-free']
-    },
-    {
-      id: 'p5',
-      name: 'Fettuccine Alfredo',
-      description: 'Fettuccine pasta tossed in a rich, creamy Parmesan cheese sauce',
-      price: 16.99,
-      imageUrl: 'https://images.pexels.com/photos/5175537/pexels-photo-5175537.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '2-1',
-      available: true,
-      hasCustomization: true,
-      tags: ['pasta', 'vegetarian']
-    },
-    {
-      id: 'p6',
       name: 'Classic Cheeseburger',
       description: 'Juicy beef patty topped with cheddar cheese, lettuce, tomato, and special sauce on a brioche bun',
       price: 14.99,
       imageUrl: 'https://images.pexels.com/photos/1639557/pexels-photo-1639557.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '2-2',
+      categoryId: '4',
       available: true,
       hasCustomization: true,
-      tags: ['burger', 'popular']
+      tags: ['burger', 'popular', 'beef']
     },
-    // Desserts
+    {
+      id: 'p5',
+      name: 'BBQ Bacon Burger',
+      description: 'Beef patty with crispy bacon, BBQ sauce, onion rings, and cheddar cheese',
+      price: 16.99,
+      imageUrl: 'https://images.pexels.com/photos/3616956/pexels-photo-3616956.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '4',
+      available: true,
+      hasCustomization: true,
+      tags: ['burger', 'bacon', 'bbq']
+    },
+    {
+      id: 'p6',
+      name: 'Veggie Burger',
+      description: 'Plant-based patty with avocado, lettuce, tomato, and herb mayo on a whole wheat bun',
+      price: 13.99,
+      imageUrl: 'https://images.pexels.com/photos/1199957/pexels-photo-1199957.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '4',
+      available: true,
+      hasCustomization: true,
+      tags: ['vegetarian', 'healthy', 'vegan']
+    },
+
+    // Pizzas (Category ID: 5)
     {
       id: 'p7',
-      name: 'Chocolate Lava Cake',
-      description: 'Warm chocolate cake with a molten center, served with vanilla ice cream',
-      price: 8.99,
-      imageUrl: 'https://images.pexels.com/photos/132694/pexels-photo-132694.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '3',
+      name: 'Margherita Pizza',
+      description: 'Classic pizza with fresh mozzarella, tomato sauce, and basil leaves',
+      price: 18.99,
+      imageUrl: 'https://images.pexels.com/photos/2147491/pexels-photo-2147491.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '5',
       available: true,
-      hasCustomization: false,
-      tags: ['chocolate', 'hot', 'popular']
+      hasCustomization: true,
+      tags: ['pizza', 'classic', 'vegetarian']
     },
-    // Beverages
     {
       id: 'p8',
+      name: 'Pepperoni Pizza',
+      description: 'Traditional pizza topped with pepperoni slices and mozzarella cheese',
+      price: 20.99,
+      imageUrl: 'https://images.pexels.com/photos/315755/pexels-photo-315755.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '5',
+      available: true,
+      hasCustomization: true,
+      tags: ['pizza', 'pepperoni', 'popular']
+    },
+    {
+      id: 'p9',
+      name: 'Supreme Pizza',
+      description: 'Loaded with pepperoni, sausage, mushrooms, bell peppers, and onions',
+      price: 24.99,
+      imageUrl: 'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '5',
+      available: true,
+      hasCustomization: true,
+      tags: ['pizza', 'supreme', 'loaded']
+    },
+
+    // Beverages (Category ID: 6)
+    {
+      id: 'p10',
       name: 'Fresh Lemonade',
       description: 'House-made lemonade with fresh-squeezed lemons',
       price: 4.99,
       imageUrl: 'https://images.pexels.com/photos/2109099/pexels-photo-2109099.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '4-2',
+      categoryId: '6',
       available: true,
       hasCustomization: true,
-      tags: ['refreshing', 'non-alcoholic']
+      tags: ['refreshing', 'non-alcoholic', 'citrus']
     },
     {
-      id: 'p9',
+      id: 'p11',
       name: 'Cold Brew Coffee',
       description: 'Smooth and bold coffee brewed cold for 24 hours',
-      price: 4.99,
+      price: 5.99,
       imageUrl: 'https://images.pexels.com/photos/312418/pexels-photo-312418.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
-      categoryId: '4-2',
-      available: false,
+      categoryId: '6',
+      available: true,
       hasCustomization: true,
-      tags: ['coffee', 'cold']
+      tags: ['coffee', 'cold', 'caffeine']
+    },
+    {
+      id: 'p12',
+      name: 'Strawberry Milkshake',
+      description: 'Creamy vanilla ice cream blended with fresh strawberries and milk',
+      price: 6.99,
+      imageUrl: 'https://images.pexels.com/photos/434295/pexels-photo-434295.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1',
+      categoryId: '6',
+      available: true,
+      hasCustomization: true,
+      tags: ['milkshake', 'strawberry', 'sweet']
     }
   ];
   

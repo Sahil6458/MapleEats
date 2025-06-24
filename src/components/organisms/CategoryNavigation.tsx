@@ -5,8 +5,8 @@ import { ChevronLeft, ChevronRight, Search } from 'lucide-react';
 
 interface CategoryNavigationProps {
   categories: Category[];
-  activeCategory: string | null;
-  onSelectCategory: (categoryId: string) => void;
+  activeCategory: number | null;
+  onSelectCategory: (categoryId: number) => void;
   loading?: boolean;
   className?: string;
 }
@@ -22,32 +22,32 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
   const [showLeftScroll, setShowLeftScroll] = React.useState(false);
   const [showRightScroll, setShowRightScroll] = React.useState(false);
   const [searchTerm, setSearchTerm] = React.useState('');
-  
+
   // Check if scroll buttons should be visible
   useEffect(() => {
     const checkScroll = () => {
       const container = scrollContainerRef.current;
       if (!container) return;
-      
+
       setShowLeftScroll(container.scrollLeft > 0);
       setShowRightScroll(
         container.scrollLeft < (container.scrollWidth - container.clientWidth - 10)
       );
     };
-    
+
     const container = scrollContainerRef.current;
     if (container) {
       checkScroll();
       container.addEventListener('scroll', checkScroll);
       window.addEventListener('resize', checkScroll);
-      
+
       return () => {
         container.removeEventListener('scroll', checkScroll);
         window.removeEventListener('resize', checkScroll);
       };
     }
   }, [categories]);
-  
+
   // Scroll functions
   const scrollLeft = () => {
     const container = scrollContainerRef.current;
@@ -55,19 +55,19 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
       container.scrollBy({ left: -200, behavior: 'smooth' });
     }
   };
-  
+
   const scrollRight = () => {
     const container = scrollContainerRef.current;
     if (container) {
       container.scrollBy({ left: 200, behavior: 'smooth' });
     }
   };
-  
+
   // Filter categories based on search term
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-  
+  // const filteredCategories = categories.filter(category =>
+  //   category.name.toLowerCase().includes(searchTerm.toLowerCase())
+  // );
+
   return (
     <div className={`relative bg-white border-b border-gray-200 ${className}`}>
       {/* Search Input */}
@@ -86,7 +86,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
           />
         </div>
       </div>
-      
+
       {/* Category Navigation */}
       <div className="relative">
         {/* Left Scroll Button */}
@@ -99,7 +99,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
             <ChevronLeft size={24} className="text-gray-500" />
           </button>
         )}
-        
+
         {/* Categories */}
         <div
           ref={scrollContainerRef}
@@ -114,25 +114,29 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
                 <div className="h-4 bg-gray-200 rounded w-16"></div>
               </div>
             ))
-          ) : filteredCategories.length > 0 ? (
+          ) : categories.length > 0 ? (
             // Actual categories
-            filteredCategories.map(category => (
-              <CategoryTab
-                key={category.id}
-                category={category}
-                isActive={activeCategory === category.id}
-                onClick={() => onSelectCategory(category.id)}
-                className="mr-6 shrink-0"
-              />
-            ))
+            categories
+              .filter(category =>
+                category.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )
+              .map(category => (
+                <CategoryTab
+                  key={category.id}
+                  category={category}
+                  isActive={activeCategory === category.id}
+                  onClick={() => onSelectCategory(category.id)}
+                  className="mr-6 shrink-0"
+                />
+              ))
           ) : (
             // No results
             <div className="py-4 text-center text-gray-500 w-full">
-              No categories found
+              {searchTerm ? 'No categories found matching your search' : 'No categories found'}
             </div>
           )}
         </div>
-        
+
         {/* Right Scroll Button */}
         {showRightScroll && (
           <button
@@ -144,7 +148,7 @@ const CategoryNavigation: React.FC<CategoryNavigationProps> = ({
           </button>
         )}
       </div>
-      
+
       {/* Subcategories */}
       {activeCategory && (
         <div className="px-4 py-2 flex overflow-x-auto scrollbar-hide">

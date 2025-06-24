@@ -1,12 +1,15 @@
 // Type definitions for the delivery menu component
 
-// Category interface
+// Category interface - matches API response structure
 export interface Category {
-  id: string;
+  id: number;
+  restaurant: number;
+  address: number;
   name: string;
-  description?: string;
-  imageUrl?: string;
-  slug: string;
+  description: string;
+  image: string | null;
+  // Optional UI fields
+  slug?: string;
   parentId?: string;
   subcategories?: Category[];
   featured?: boolean;

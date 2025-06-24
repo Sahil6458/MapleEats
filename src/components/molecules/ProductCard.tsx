@@ -2,6 +2,8 @@ import React from 'react';
 import { Product } from '../../types';
 import Badge from '../atoms/Badge';
 import Button from '../atoms/Button';
+import QuantitySelector from '../atoms/QuantitySelector';
+import { useCart } from '../../context/CartContext';
 import { ChevronRight, AlertCircle } from 'lucide-react';
 
 interface ProductCardProps {
@@ -18,12 +20,62 @@ const ProductCard: React.FC<ProductCardProps> = ({
   viewType = 'grid'
 }) => {
   const isGridView = viewType === 'grid';
+  const { items, addToCart, updateQuantity, removeFromCart } = useCart();
   
   // Format price with correct currency symbol and decimals
   const formattedPrice = new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
   }).format(product.price);
+
+  // Get total quantity of this product in cart (sum of all cart items with same productId)
+  const cartQuantity = items
+    .filter(item => item.productId === product.id)
+    .reduce((total, item) => total + item.quantity, 0);
+
+  // Handle adding product to cart (for products without customization)
+  const handleAddToCart = () => {
+    if (product.hasCustomization) {
+      onSelect(product);
+    } else {
+      addToCart(product, 1);
+    }
+  };
+
+  // Handle quantity increase
+  const handleIncreaseQuantity = () => {
+    if (cartQuantity === 0) {
+      // If not in cart, add it
+      addToCart(product, 1);
+    } else {
+      // If already in cart, find the most recent item and update its quantity
+      const latestCartItem = items
+        .filter(item => item.productId === product.id)
+        .sort((a, b) => parseInt(b.id.split('_')[1]) - parseInt(a.id.split('_')[1]))[0];
+      
+      if (latestCartItem) {
+        updateQuantity(latestCartItem.id, latestCartItem.quantity + 1);
+      }
+    }
+  };
+
+  // Handle quantity decrease
+  const handleDecreaseQuantity = () => {
+    if (cartQuantity > 0) {
+      // Find the most recent item and decrease its quantity
+      const latestCartItem = items
+        .filter(item => item.productId === product.id)
+        .sort((a, b) => parseInt(b.id.split('_')[1]) - parseInt(a.id.split('_')[1]))[0];
+      
+      if (latestCartItem) {
+        if (latestCartItem.quantity > 1) {
+          updateQuantity(latestCartItem.id, latestCartItem.quantity - 1);
+        } else {
+          removeFromCart(latestCartItem.id);
+        }
+      }
+    }
+  };
   
   return (
     <div 
@@ -55,7 +107,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {/* Availability Badge */}
         {!product.available && (
           <div className="absolute top-0 right-0 m-2">
-            <Badge text="Sold Out\" variant="error" />
+            <Badge text="Sold Out" variant="error" />
           </div>
         )}
       </div>
@@ -86,20 +138,41 @@ const ProductCard: React.FC<ProductCardProps> = ({
           )}
         </div>
         
-        {/* Price & Add Button */}
+        {/* Price & Add Button / Quantity Controls */}
         <div className="flex items-center justify-between mt-auto">
           <span className="text-lg font-medium text-gray-900">{formattedPrice}</span>
           
-          <Button
-            variant="primary"
-            size="sm"
-            onClick={() => onSelect(product)}
-            disabled={!product.available}
-            className="flex items-center"
-          >
-            {product.hasCustomization ? 'Customize' : 'Add'}
-            {product.hasCustomization && <ChevronRight size={16} className="ml-1" />}
-          </Button>
+          <div className="flex items-center gap-2">
+            {cartQuantity > 0 && !product.hasCustomization ? (
+              // Show quantity controls if item is in cart and doesn't need customization
+              <QuantitySelector
+                quantity={cartQuantity}
+                onIncrease={handleIncreaseQuantity}
+                onDecrease={handleDecreaseQuantity}
+                size="sm"
+                min={0}
+              />
+            ) : (
+              // Show add/customize button with quantity indicator
+              <>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  onClick={handleAddToCart}
+                  disabled={!product.available}
+                  className="flex items-center"
+                >
+                  {product.hasCustomization ? 'Customize' : 'Add'}
+                  {product.hasCustomization && <ChevronRight size={16} className="ml-1" />}
+                </Button>
+                {cartQuantity > 0 && (
+                  <div className="bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center font-medium">
+                    {cartQuantity}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
     </div>

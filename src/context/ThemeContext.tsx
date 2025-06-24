@@ -4,7 +4,7 @@ import { Theme } from '../types';
 // Default theme
 const defaultTheme: Theme = {
   colors: {
-    primary: '#2563EB',
+    primary: '#F97316',
     secondary: '#0D9488',
     accent: '#F97316',
     success: '#22C55E',
@@ -29,9 +29,9 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{ children: ReactNode; initialTheme?: Partial<Theme> }> = ({ 
-  children, 
-  initialTheme = {} 
+export const ThemeProvider: React.FC<{ children: ReactNode; initialTheme?: Partial<Theme> }> = ({
+  children,
+  initialTheme = {}
 }) => {
   const [theme, setTheme] = useState<Theme>({
     ...defaultTheme,
