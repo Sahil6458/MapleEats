@@ -17,7 +17,7 @@ const TopBar: React.FC<TopBarProps> = ({
   className = ""
 }) => {
   return (
-    <header className={`bg-white shadow-sm border-b border-gray-200 ${className}`}>
+    <header className={`sticky top-0 z-50 bg-white shadow-sm border-b border-gray-200 ${className}`}>
       <div className="container mx-auto px-4 py-3">
         <div className="flex items-center justify-between">
           {/* Left side - Back button or Logo */}
