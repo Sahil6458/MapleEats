@@ -11,6 +11,7 @@ import ProductCustomizationModal from '../organisms/ProductCustomizationModal';
 import CartButton from '../molecules/CartButton';
 import CartOverlay from '../organisms/CartOverlay';
 import TopBar from '../molecules/TopBar';
+import OrdersButton from '../atoms/OrdersButton';
 
 interface DeliveryMenuProps {
   vendorId: string;
@@ -108,8 +109,11 @@ const DeliveryMenu: React.FC<DeliveryMenuProps> = ({
             </div>
           </div>
 
-          {/* Cart Button */}
-          <CartButton onClick={() => setIsCartOpen(true)} />
+          {/* Action Buttons */}
+          <div className="flex items-center space-x-2">
+            <OrdersButton showLabel={false} className="hidden sm:flex" />
+            <CartButton onClick={() => setIsCartOpen(true)} />
+          </div>
         </div>
       </header>
 

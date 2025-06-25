@@ -146,7 +146,7 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
                 <div className="flex items-center text-sm text-gray-500 mb-2">
                   <Clock size={16} className="mr-1" />
                   {restaurant.deliveryTime !== undefined ? (
-                    <span>{restaurant.deliveryTime} mins</span>
+                    <span>{25 - 35} mins</span>
                   ) : (
                     <span>{restaurant.opening_time} - {restaurant.closing_time}</span>
                   )}

@@ -4,6 +4,8 @@ import ComingSoonAnimation from './components/molecules/ComingSoonAnimation';
 import LoadingAnimation from './components/molecules/LoadingAnimation';
 import DeliveryMenu from './components/templates/DeliveryMenu';
 import { CartProvider } from './context/CartContext';
+import { OrderProvider } from './context/OrderContext';
+import { AuthProvider } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
 import LocationPrompt from './components/organisms/LocationPrompt';
 import RestaurantList from './components/organisms/RestaurantList';
@@ -136,45 +138,47 @@ function App() {
     setSelectedRestaurant(null);
   };
 
-  if (!location) {
-    return <LocationPrompt onLocationSelect={setLocation} />;
-  }
-
-  if (noRestaurantsAvailable) {
-    return <ComingSoonAnimation onRetry={handleRetryLocation} />;
-  }
-
-  if (!selectedRestaurant) {
-    return (
-      <>
-        {isLoading && <LoadingAnimation text="Finding restaurants near you..." />}
-        {error && <div className="error-message">{error}</div>}
-        {nearbyRestaurants.length > 0 && (
-          <RestaurantList
-            restaurants={nearbyRestaurants}
-            onSelectRestaurant={setSelectedRestaurant}
-            selectedService={selectedService}
-            onBackToLocation={handleBackToLocation}
-            currentLocation={location.address}
-          />
-        )}
-      </>
-    );
-  }
-
   return (
     <ThemeProvider initialTheme={vendorTheme}>
-      <CartProvider>
-        <div className="min-h-screen bg-gray-100">
-          <DeliveryMenu
-            vendorId={selectedRestaurant?.id || '1'}
-            addressId={Number(selectedRestaurant?.address_id)}
-            deliveryLocation={location}
-            onBackToRestaurants={handleBackToRestaurants}
-            className="min-h-screen"
-          />
-        </div>
-      </CartProvider>
+      <AuthProvider>
+        <OrderProvider>
+          <CartProvider>
+          {!location && <LocationPrompt onLocationSelect={setLocation} />}
+
+          {location && noRestaurantsAvailable && (
+            <ComingSoonAnimation onRetry={handleRetryLocation} />
+          )}
+
+          {location && !selectedRestaurant && !noRestaurantsAvailable && (
+            <>
+              {isLoading && <LoadingAnimation text="Finding restaurants near you..." />}
+              {error && <div className="error-message">{error}</div>}
+              {nearbyRestaurants.length > 0 && (
+                <RestaurantList
+                  restaurants={nearbyRestaurants}
+                  onSelectRestaurant={setSelectedRestaurant}
+                  selectedService={selectedService}
+                  onBackToLocation={handleBackToLocation}
+                  currentLocation={location.address}
+                />
+              )}
+            </>
+          )}
+
+          {location && selectedRestaurant && (
+            <div className="min-h-screen bg-gray-100">
+              <DeliveryMenu
+                vendorId={selectedRestaurant?.id || '1'}
+                addressId={Number(selectedRestaurant?.address_id)}
+                deliveryLocation={location}
+                onBackToRestaurants={handleBackToRestaurants}
+                className="min-h-screen"
+              />
+            </div>
+          )}
+        </CartProvider>
+      </OrderProvider>
+      </AuthProvider>
     </ThemeProvider>
   );
 }

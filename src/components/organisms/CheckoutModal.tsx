@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, MapPin, User, Phone, CreditCard, Check, AlertCircle } from 'lucide-react';
+import { X, MapPin, User, Phone, CreditCard, Check, AlertCircle, Banknote } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
+import { useOrders } from '../../context/OrderContext';
+import { useAuth } from '../../context/AuthContext';
 import { useCheckout } from '../../hooks/useCheckout';
 import Button from '../atoms/Button';
 
@@ -23,8 +25,13 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
   deliveryAddress,
   orderTotal
 }) => {
-  const { clearCart } = useCart();
+  const { items, clearCart, subtotal } = useCart();
+  const { addOrder } = useOrders();
+  const { user, isAuthenticated, createOrLoginUser, verifyOTP: authVerifyOTP } = useAuth();
   const [showAddressError, setShowAddressError] = useState(false);
+  const [accountStep, setAccountStep] = useState<'none' | 'otp_required' | 'completed'>('none');
+  const [pendingUserData, setPendingUserData] = useState<{ phone: string; name: string; email: string } | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
   
   const {
     currentStep,
@@ -36,6 +43,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     useFallback,
     setCurrentStep,
     setOtp,
+    setLoading,
+    setError,
     sendOTP,
     verifyOTP,
     updateCustomerDetails,
@@ -43,14 +52,71 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     goToStep
   } = useCheckout();
 
+  // Validation functions
+  const validateName = (name: string): string => {
+    if (!name.trim()) return 'Full name is required';
+    if (name.trim().length < 2) return 'Name must be at least 2 characters';
+    if (!/^[a-zA-Z\s]+$/.test(name.trim())) return 'Name can only contain letters and spaces';
+    return '';
+  };
+
+  const validateEmail = (email: string): string => {
+    if (!email.trim()) return 'Email address is required';
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) return 'Please enter a valid email address';
+    return '';
+  };
+
+  const validatePhone = (phone: string): string => {
+    if (!phone.trim()) return 'Phone number is required';
+    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/;
+    if (!phoneRegex.test(phone.replace(/[\s\-\(\)]/g, ''))) {
+      return 'Please enter a valid phone number';
+    }
+    if (phone.replace(/[\s\-\(\)]/g, '').length < 10) {
+      return 'Phone number must be at least 10 digits';
+    }
+    return '';
+  };
+
+  const validateForm = (): boolean => {
+    const errors: {[key: string]: string} = {};
+    
+    errors.name = validateName(customerDetails.name);
+    errors.email = validateEmail(customerDetails.email);
+    errors.phone = validatePhone(customerDetails.phone);
+    
+    // Remove empty error messages
+    Object.keys(errors).forEach(key => {
+      if (!errors[key]) delete errors[key];
+    });
+    
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   const handleSendOTP = async () => {
-    if (!customerDetails.phone) {
+    if (!validateForm()) {
       return;
     }
 
-    const result = await sendOTP(customerDetails.phone);
-    if (result.success) {
+    // Check if user exists and handle account creation/login
+    const accountResult = await createOrLoginUser({
+      phone: customerDetails.phone,
+      name: customerDetails.name,
+      email: customerDetails.email
+    });
+
+    if (accountResult.success && accountResult.requiresOTP) {
+      setPendingUserData({
+        phone: customerDetails.phone,
+        name: customerDetails.name,
+        email: customerDetails.email
+      });
+      setAccountStep('otp_required');
       setCurrentStep('otp');
+    } else if (accountResult.error) {
+      setError(accountResult.error);
     }
   };
 
@@ -59,26 +125,78 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
       return;
     }
 
-    const result = await verifyOTP(customerDetails.phone, otp);
+    const result = await authVerifyOTP(
+      customerDetails.phone, 
+      otp, 
+      pendingUserData ? { 
+        name: pendingUserData.name, 
+        email: pendingUserData.email 
+      } : undefined
+    );
+    
     if (result.success) {
+      setAccountStep('completed');
       setCurrentStep('payment');
     }
   };
 
-  const handlePlaceOrder = () => {
-    // Simulate order placement
-    setCurrentStep('success');
-    // Clear cart after successful order
-    setTimeout(() => {
-      clearCart();
-      resetCheckout();
-      onClose();
-    }, 3000);
+  const handlePlaceOrder = async () => {
+    setLoading(true);
+
+    try {
+      // Create the order (works for both authenticated and non-authenticated users)
+      const newOrder = await addOrder({
+        status: 'pending',
+        estimatedDeliveryTime: '25-35 min',
+        items: items,
+        customerDetails: {
+          name: customerDetails.name,
+          email: customerDetails.email,
+          phone: customerDetails.phone,
+          deliveryInstructions: customerDetails.deliveryInstructions
+        },
+        deliveryAddress: {
+          address: deliveryAddress?.address || '',
+          city: deliveryAddress?.city || '',
+          pincode: deliveryAddress?.pincode || '',
+          phone: customerDetails.phone
+        },
+        pricing: {
+          subtotal: subtotal,
+          tax: orderTotal * 0.13, // Assuming 13% tax
+          deliveryFee: 2.99,
+          fees: 1.99, // Platform fee
+          total: orderTotal
+        },
+        restaurant: {
+          id: 'restaurant_1',
+          name: 'MapleEats Restaurant'
+        }
+      }, user?.id); // Pass user ID if authenticated, undefined if not
+
+      console.log('Order created:', newOrder);
+      
+      // Show success step
+      setCurrentStep('success');
+      
+      // Clear cart after successful order
+      setTimeout(() => {
+        clearCart();
+        resetCheckout();
+        onClose();
+      }, 3000);
+    } catch (error) {
+      console.error('Failed to create order:', error);
+      setError('Failed to place order. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleClose = () => {
     resetCheckout();
     setShowAddressError(false);
+    setValidationErrors({});
     onClose();
   };
 
@@ -201,11 +319,22 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
           <input
             type="text"
             value={customerDetails.name}
-            onChange={(e) => updateCustomerDetails({ name: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => {
+              updateCustomerDetails({ name: e.target.value });
+              // Clear validation error when user starts typing
+              if (validationErrors.name) {
+                setValidationErrors(prev => ({ ...prev, name: '' }));
+              }
+            }}
+            className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.name ? 'border-red-500' : 'border-gray-300'
+            }`}
             placeholder="Enter your full name"
             required
           />
+          {validationErrors.name && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.name}</p>
+          )}
         </div>
 
         <div>
@@ -215,11 +344,22 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
           <input
             type="email"
             value={customerDetails.email}
-            onChange={(e) => updateCustomerDetails({ email: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => {
+              updateCustomerDetails({ email: e.target.value });
+              // Clear validation error when user starts typing
+              if (validationErrors.email) {
+                setValidationErrors(prev => ({ ...prev, email: '' }));
+              }
+            }}
+            className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.email ? 'border-red-500' : 'border-gray-300'
+            }`}
             placeholder="Enter your email"
             required
           />
+          {validationErrors.email && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.email}</p>
+          )}
         </div>
 
         <div>
@@ -229,11 +369,22 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
           <input
             type="tel"
             value={customerDetails.phone}
-            onChange={(e) => updateCustomerDetails({ phone: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
+            onChange={(e) => {
+              updateCustomerDetails({ phone: e.target.value });
+              // Clear validation error when user starts typing
+              if (validationErrors.phone) {
+                setValidationErrors(prev => ({ ...prev, phone: '' }));
+              }
+            }}
+            className={`w-full px-3 py-2 border rounded-md focus:ring-blue-500 focus:border-blue-500 ${
+              validationErrors.phone ? 'border-red-500' : 'border-gray-300'
+            }`}
             placeholder="+1234567890"
             required
           />
+          {validationErrors.phone && (
+            <p className="mt-1 text-sm text-red-600">{validationErrors.phone}</p>
+          )}
         </div>
 
         <div>
@@ -245,8 +396,12 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
             onChange={(e) => updateCustomerDetails({ deliveryInstructions: e.target.value })}
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
             rows={3}
-            placeholder="Any special instructions for delivery..."
+            placeholder="e.g., Ring the doorbell, Leave at door, Building entrance code, etc."
+            maxLength={200}
           />
+          <p className="mt-1 text-xs text-gray-500">
+            Help our delivery person find you easily (max 200 characters)
+          </p>
         </div>
       </div>
 
@@ -256,7 +411,11 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
         </Button>
         <Button 
           variant="primary" 
-          onClick={() => goToStep('phone')}
+          onClick={() => {
+            if (validateForm()) {
+              goToStep('phone');
+            }
+          }}
           disabled={!customerDetails.name || !customerDetails.email || !customerDetails.phone}
         >
           Continue
@@ -306,13 +465,27 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
           Enter the 6-digit code sent to <strong>{customerDetails.phone}</strong>
         </p>
         
-        {useFallback && (
-          <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 mb-4">
-            <p className="text-amber-800 text-sm font-medium">
-              🔧 Testing Mode: Use "123456" as the verification code
+        {accountStep === 'otp_required' && (
+          <div className="bg-blue-50 p-3 rounded-lg border border-blue-200 mb-4">
+            <p className="text-blue-800 text-sm font-medium">
+              {pendingUserData ? 
+                "🎉 Creating your account! Your order will be saved to your profile." :
+                "👋 Welcome back! Logging you into your account."
+              }
             </p>
           </div>
         )}
+        
+        {/* Test Mode Notice - Always show for now */}
+        <div className="bg-amber-50 p-3 rounded-lg border border-amber-200 mb-4">
+          <div className="flex items-center space-x-2">
+            <span className="text-amber-600">🧪</span>
+            <div>
+              <p className="text-amber-800 text-sm font-medium">Test Mode Active</p>
+              <p className="text-amber-700 text-xs">Use "123456" as the verification code</p>
+            </div>
+          </div>
+        </div>
         
         <div className="flex justify-center space-x-2 mb-4">
           {[...Array(6)].map((_, index) => (
@@ -322,14 +495,28 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
               maxLength={1}
               value={otp[index] || ''}
               onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9]/g, ''); // Only allow numbers
                 const newOtp = otp.split('');
-                newOtp[index] = e.target.value;
+                newOtp[index] = value;
                 setOtp(newOtp.join(''));
                 
                 // Auto-focus next input
-                if (e.target.value && index < 5) {
-                  const nextInput = e.target.parentElement?.children[index + 1] as HTMLInputElement;
+                if (value && index < 5) {
+                  const nextInput = (e.target as HTMLInputElement).parentElement?.children[index + 1] as HTMLInputElement;
                   nextInput?.focus();
+                }
+                
+                // Auto-focus previous input on backspace
+                if (!value && index > 0) {
+                  const prevInput = (e.target as HTMLInputElement).parentElement?.children[index - 1] as HTMLInputElement;
+                  prevInput?.focus();
+                }
+              }}
+              onKeyDown={(e) => {
+                // Handle backspace to move to previous input
+                if (e.key === 'Backspace' && !otp[index] && index > 0) {
+                  const prevInput = (e.target as HTMLInputElement).parentElement?.children[index - 1] as HTMLInputElement;
+                  prevInput?.focus();
                 }
               }}
               className="w-12 h-12 text-center text-lg font-semibold border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500"
@@ -347,8 +534,11 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
       </div>
 
       {error && (
-        <div className={`p-3 rounded-lg border ${useFallback ? 'bg-amber-50 border-amber-200' : 'bg-red-50 border-red-200'}`}>
-          <p className={`text-sm ${useFallback ? 'text-amber-800' : 'text-red-800'}`}>{error}</p>
+        <div className="bg-red-50 p-3 rounded-lg border border-red-200">
+          <div className="flex items-center space-x-2">
+            <span className="text-red-600">❌</span>
+            <p className="text-red-800 text-sm">{error}</p>
+          </div>
         </div>
       )}
 
@@ -372,18 +562,103 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     <div className="space-y-4">
       <h3 className="text-lg font-semibold mb-4">Payment & Order Summary</h3>
       
+      {/* Payment Method */}
+      <div className="space-y-3">
+        <h4 className="font-medium text-gray-900">Payment Method</h4>
+        <div className="border border-green-200 bg-green-50 p-4 rounded-lg">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+              <Banknote className="text-green-600" size={20} />
+            </div>
+            <div className="flex-1">
+              <p className="font-medium text-green-800">Cash on Delivery</p>
+              <p className="text-sm text-green-700">Pay when your order arrives</p>
+            </div>
+            <div className="w-5 h-5 bg-green-600 rounded-full flex items-center justify-center">
+              <Check className="text-white" size={14} />
+            </div>
+          </div>
+        </div>
+        <p className="text-sm text-gray-600">
+          💡 Currently, we only accept cash payments upon delivery. Please have the exact amount ready.
+        </p>
+      </div>
+
+      {/* Order Summary */}
       <div className="bg-gray-50 p-4 rounded-lg border">
-        <h4 className="font-medium mb-2">Order Summary</h4>
-        <div className="flex justify-between text-lg font-semibold">
-          <span>Total Amount:</span>
-          <span>${orderTotal.toFixed(2)}</span>
+        <h4 className="font-medium mb-3">Order Summary</h4>
+        <div className="space-y-2 text-sm">
+          <div className="flex justify-between">
+            <span>Subtotal</span>
+            <span>${subtotal.toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Tax (13%)</span>
+            <span>${(orderTotal * 0.13).toFixed(2)}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Delivery Fee</span>
+            <span>$2.99</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Platform Fee</span>
+            <span>$1.99</span>
+          </div>
+          <div className="border-t pt-2 mt-2">
+            <div className="flex justify-between text-lg font-semibold">
+              <span>Total Amount:</span>
+              <span>${orderTotal.toFixed(2)}</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-        <p className="text-green-800 text-sm">
-          ✓ Phone number verified successfully
-        </p>
+      {/* Account Status */}
+      {isAuthenticated && user ? (
+        <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+          <div className="flex items-center space-x-2">
+            <Check className="text-green-600" size={16} />
+            <p className="text-green-800 text-sm font-medium">
+              Account verified: {user.name || user.phone}
+            </p>
+          </div>
+        </div>
+      ) : accountStep === 'completed' ? (
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <div className="flex items-center space-x-2">
+            <Check className="text-blue-600" size={16} />
+            <p className="text-blue-800 text-sm font-medium">
+              Account created! Your order will be saved to your profile.
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+          <div className="flex items-center space-x-2">
+            <User className="text-gray-600" size={16} />
+            <p className="text-gray-700 text-sm font-medium">
+              Order as guest (no account required)
+            </p>
+          </div>
+        </div>
+      )}
+      
+
+
+      {/* Delivery Information */}
+      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+        <div className="flex items-start space-x-2">
+          <MapPin className="text-blue-600 mt-0.5" size={16} />
+          <div>
+            <p className="text-blue-800 text-sm font-medium">Delivery Address</p>
+            <p className="text-blue-700 text-sm">
+              {deliveryAddress?.address}
+            </p>
+            <p className="text-blue-700 text-sm">
+              {deliveryAddress?.city}, {deliveryAddress?.pincode}
+            </p>
+          </div>
+        </div>
       </div>
 
       <div className="flex space-x-3 pt-4">
@@ -395,8 +670,12 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
           onClick={handlePlaceOrder}
           loading={loading}
           disabled={loading}
+          className="flex items-center space-x-2"
         >
-          {loading ? 'Placing Order...' : 'Place Order'}
+          <Banknote size={16} />
+          <span>
+            {loading ? 'Placing Order...' : 'Place Order (Cash on Delivery)'}
+          </span>
         </Button>
       </div>
     </div>

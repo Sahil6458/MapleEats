@@ -98,6 +98,50 @@ export interface CartItem {
   totalPrice: number;
 }
 
+// Order status types
+export type OrderStatus = 'pending' | 'confirmed' | 'preparing' | 'ready' | 'out_for_delivery' | 'delivered' | 'cancelled';
+
+// Order interface
+export interface Order {
+  id: string;
+  orderNumber: string;
+  status: OrderStatus;
+  createdAt: Date;
+  estimatedDeliveryTime: string;
+  items: CartItem[];
+  customerDetails: {
+    name: string;
+    email: string;
+    phone: string;
+    deliveryInstructions?: string;
+  };
+  deliveryAddress: {
+    address: string;
+    city: string;
+    pincode: string;
+    phone: string;
+  };
+  pricing: {
+    subtotal: number;
+    tax: number;
+    deliveryFee: number;
+    fees: number;
+    total: number;
+  };
+  restaurant?: {
+    id: string;
+    name: string;
+  };
+  tracking?: {
+    orderPlaced?: Date;
+    confirmed?: Date;
+    preparing?: Date;
+    ready?: Date;
+    outForDelivery?: Date;
+    delivered?: Date;
+  };
+}
+
 // Theme interface for vendor customization
 export interface Theme {
   colors: {

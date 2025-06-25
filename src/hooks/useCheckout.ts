@@ -122,6 +122,7 @@ export const useCheckout = () => {
     setCurrentStep,
     setCustomerDetails,
     setOtp,
+    setLoading,
     setError,
     sendOTP,
     verifyOTP,
