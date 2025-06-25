@@ -90,38 +90,7 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
         </div>
 
         {/* Filters and Sort Controls */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
-          <Button
-            variant="outline"
-            onClick={() => setShowFilters(!showFilters)}
-            className="flex items-center"
-          >
-            <Filter size={20} className="mr-2" />
-            Filters
-          </Button>
-
-          <div className="flex items-center space-x-2">
-            <span className="text-sm text-gray-600">Sort by:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as SortOption)}
-              className="border border-gray-300 rounded-md py-1 px-2 text-sm focus:ring-blue-500 focus:border-blue-500"
-            >
-              <option value="distance">Distance</option>
-              <option value="deliveryTime">Delivery Time</option>
-              <option value="rating">Rating</option>
-              <option value="serviceType">Service Type</option>
-            </select>
-          </div>
-        </div>
-
-        {/* Filter Panel */}
-        {showFilters && (
-          <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
-            {/* Filter controls would go here */}
-            <p className="text-gray-500 text-sm">Filter options coming soon...</p>
-          </div>
-        )}
+       
 
         {/* Restaurant List */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -143,11 +112,11 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
                     <span className="text-blue-600 font-medium">No Image Available</span>
                   </div>
                 )}
-                {restaurant.isOpen === false && (
+                {/* {restaurant.isOpen === false && (
                   <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
                     <span className="text-white font-semibold text-lg">Currently Closed</span>
                   </div>
-                )}
+                )} */}
               </div>
 
               <div className="p-4">
@@ -183,16 +152,16 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
                   )}
                 </div>
 
-                {restaurant.minimumOrder !== undefined && (
+                {/* {restaurant.minimumOrder !== undefined && (
                   <div className="flex items-center text-sm text-gray-500 mb-3">
                     <DollarSign size={16} className="mr-1" />
                     <span>Min. ${restaurant.minimumOrder}</span>
                   </div>
-                )}
+                )} */}
 
                 <div className="flex justify-between items-center">
                   <div className="flex gap-2">
-                    {restaurant.serviceOptions?.delivery && (
+                    {/* {restaurant.serviceOptions?.delivery && (
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                         Delivery
                       </span>
@@ -201,18 +170,18 @@ const RestaurantList: React.FC<RestaurantListProps> = ({
                       <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
                         Pickup
                       </span>
-                    )}
-                    {!restaurant.serviceOptions && (
+                    )} */}
+                    {true && (
                       <span className="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full">
                         Delivery Available
                       </span>
                     )}
                   </div>
-                  {restaurant.priceRange !== undefined && (
+                  {/* {restaurant.priceRange !== undefined && (
                     <span className="text-sm text-gray-500">
                       {'$'.repeat(restaurant.priceRange)}
                     </span>
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
